@@ -20,9 +20,13 @@ jobs:
       run: swift test
       
   linux:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        swift_version: ['5.0', '5.1.2']
+        os: [ubuntu-16.04, ubuntu-18.04]
+    runs-on: ${{ matrix.os }}
     container:
-      image: swift:5.1.2
+      image: swift:${{ matrix.swift_version }}
       volumes:
       - $GITHUB_WORKSPACE:/src
       options: --workdir /src
