@@ -22,11 +22,10 @@ jobs:
   linux:
     strategy:
       matrix:
-        swift_version: ['5.0', '5.1.2']
         os: [ubuntu-16.04, ubuntu-18.04]
     runs-on: ${{ matrix.os }}
     container:
-      image: swift:${{ matrix.swift_version }}
+      image: swift:5.1.2
       volumes:
       - $GITHUB_WORKSPACE:/src
       options: --workdir /src
