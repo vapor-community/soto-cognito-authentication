@@ -13,25 +13,26 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
-  macOS:
-    runs-on: macOS-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v1
-      with:
-        fetch-depth: 1
-    - name: Build
-      run: swift build
-    - name: Test
-      run: swift test
+#  macOS:
+#    runs-on: macOS-latest
+#    steps:
+#    - name: Checkout
+#      uses: actions/checkout@v1
+#      with:
+#        fetch-depth: 1
+#    - name: Build
+#      run: swift build
+#    - name: Test
+#      run: swift test
       
   linux:
     strategy:
       matrix:
-        os: [ubuntu-16.04, ubuntu-18.04]
+        os: [ubuntu-latest]
+        image: [xenial, bionic]
     runs-on: ${{ matrix.os }}
     container:
-      image: swift:5.1.2
+      image: vapor/swift:5.2-${{ matrix.image}}
       volumes:
       - $GITHUB_WORKSPACE:/src
       options: --workdir /src
