@@ -1,6 +1,9 @@
 import AWSCognitoAuthenticationKit
 import Vapor
 
+// extend AWSCognitoAuthenticateResponse so it can be returned from a Vapor route
+extension AWSCognitoAuthenticateResponse: Content {}
+
 public extension Request {
     
     var awsCognito: AWSCognito {
