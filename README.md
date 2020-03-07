@@ -27,16 +27,16 @@ let awsCognitoIdentityConfiguration = AWSCognitoIdentityConfiguration(
 let app.awsCognito.identifiable = AWSCognitoIdentifiable(configuration: awsCognitoIdentityConfiguration)
 ```
 ## Accessing functionality
-Functions like `createUser`, `signUp`, `authenticate` with username and password and `responseToChallenge` are all accessed through `request.application.awsCognito.authenticatable` as in the following
+Functions like `createUser`, `signUp`, `authenticate` with username and password and `responseToChallenge` are all accessed through `request.application.awsCognito.authenticatable`. Extend `AWSCognitoAuthenticateResponse` to conform to `Content` and the following login route will return the full response from `AWSCognitoAuthenticable.authenticate`.
 ```
-func login(_ req: Request) throws -> Future<String> {
-    let user = try req.content.decode(User.self)
-    return req.application.awsCognito.authenticatable.authenticate(
-        username: user.username, 
-        password: user.password, 
-        context: req, 
-        on:req.eventLoop).transform(to: "Success")
-}
+    func login(_ req: Request) throws -> EventLoopFuture<AWSCognitoAuthenticateResponse> {
+        let user = try req.content.decode(User.self)
+        return req.application.awsCognito.authenticatable.authenticate(
+            username: user.username, 
+            password: user.password, 
+            context: req, 
+            on:req.eventLoop)
+    }
 ```
 If id, access or refresh tokens are provided in the 'Authorization' header as Bearer tokens the following functions in Request can be used to verify them `authenticate(idToken:)`, `authenticate(accessToken:)`, `refresh`. as in the following
 ```
