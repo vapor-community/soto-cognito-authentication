@@ -1,6 +1,6 @@
 # AWS Cognito Authentication
 [<img src="http://img.shields.io/badge/swift-5.1-brightgreen.svg" alt="Swift 5.1" />](https://swift.org)
-[<img src="https://github.com/adam-fowler/aws-cognito-authentication/workflows/Swift/badge.svg" />](https://github.com/adam-fowler/aws-cognito-authentication/workflows/Swift/badge.svg)
+[<img src="https://github.com/adam-fowler/aws-cognito-authentication/workflows/Swift/badge.svg" />](https://github.com/adam-fowler/aws-cognito-authentication/actions?query=workflow%3ASwift)
 
 This is the Vapor wrapper for [AWS Cognito Authentication Kit](https://github.com/adam-fowler/aws-cognito-authentication-kit). It provides application storage for configurations and authentication calls on request. Documentation on AWS Cognito Authentication Kit can be found [here](https://github.com/adam-fowler/aws-cognito-authentication-kit/blob/master/README.md)
 
