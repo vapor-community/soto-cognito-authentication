@@ -11,7 +11,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/adam-fowler/aws-cognito-authentication-kit.git", .upToNextMajor(from: "1.0.0-beta")),
-        .package(url: "https://github.com/vapor/vapor.git", .upToNextMajor(from: "4.0.0-beta.3")),
+        .package(url: "https://github.com/vapor/vapor.git", .upToNextMajor(from: "4.0.0")),
     ],
     targets: [
         .target(name: "AWSCognitoAuthentication", dependencies: ["AWSCognitoAuthenticationKit", "Vapor"])
