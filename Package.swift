@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -10,10 +10,13 @@ let package = Package(
         .library(name: "AWSCognitoAuthentication", targets: ["AWSCognitoAuthentication"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/adam-fowler/aws-cognito-authentication-kit.git", .upToNextMajor(from: "1.0.0-beta")),
+        .package(url: "https://github.com/adam-fowler/aws-cognito-authentication-kit.git", .upToNextMajor(from: "1.0.0-rc")),
         .package(url: "https://github.com/vapor/vapor.git", .upToNextMajor(from: "4.0.0")),
     ],
     targets: [
-        .target(name: "AWSCognitoAuthentication", dependencies: ["AWSCognitoAuthenticationKit", "Vapor"])
+        .target(name: "AWSCognitoAuthentication", dependencies: [
+            .product(name: "AWSCognitoAuthenticationKit", package: "aws-cognito-authentication-kit"),
+            .product(name: "Vapor", package: "vapor")
+        ])
     ]
 )
