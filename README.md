@@ -65,7 +65,7 @@ struct User: Content & Authenticatable {
 ```
 Add a route using the authenticator. The `AWSCognitoIdAuthenticator` authenticates the request, the `guardMiddleware` ensures the user if authenticated. The actual function accesses the `User` type via `req.auth.require`.
 ```swift
-app.grouped(AWSCognitoIdAuthenticator<User>().middleware())
+app.grouped(AWSCognitoIdAuthenticator<User>())
     .grouped(User.guardMiddleware())
     .get("user") { (req) throws -> EventLoopFuture<User> in
     let user = try req.auth.require(User.self)
