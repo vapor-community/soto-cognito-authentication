@@ -1,4 +1,6 @@
 import AWSCognitoAuthenticationKit
+import AWSSDKSwiftCore
+import NIO
 import Vapor
 
 extension AWSCognitoAuthenticateResponse: Authenticatable {}
@@ -16,7 +18,13 @@ public struct AWSCognitoBasicAuthenticator: BasicAuthenticator {
         return request.application.awsCognito.authenticatable.authenticate(username: basic.username, password: basic.password, context: request, on:request.eventLoop).map { token in
             request.auth.login(token)
         }.flatMapErrorThrowing { error in
-            throw error
+            switch error {
+            case is AWSErrorType, is NIOConnectionError:
+                // report connection errors with AWS, or unrecognised AWSErrorTypes
+                throw error
+            default:
+                return
+            }
         }
     }
 }
@@ -29,6 +37,14 @@ public struct AWSCognitoAccessAuthenticator: BearerAuthenticator {
     public func authenticate(bearer: BearerAuthorization, for request: Request) -> EventLoopFuture<Void> {
         return request.application.awsCognito.authenticatable.authenticate(accessToken: bearer.token, on: request.eventLoop).map { token in
             request.auth.login(token)
+        }.flatMapErrorThrowing { error in
+            switch error {
+            case is NIOConnectionError:
+                // loading of jwk may cause a connection error. We should report this
+                throw error
+            default:
+                return
+            }
         }
     }
 }
@@ -43,6 +59,14 @@ public struct AWSCognitoIdAuthenticator<Payload: Authenticatable & Codable>: Bea
     public func authenticate(bearer: BearerAuthorization, for request: Request) -> EventLoopFuture<Void> {
         return request.application.awsCognito.authenticatable.authenticate(idToken: bearer.token, on: request.eventLoop).map { (payload: Payload)->() in
             request.auth.login(payload)
+        }.flatMapErrorThrowing { error in
+            switch error {
+            case is NIOConnectionError:
+                // loading of jwk may cause a connection error. We should report this
+                throw error
+            default:
+                return
+            }
         }
     }
 }
