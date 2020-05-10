@@ -10,7 +10,7 @@ let package = Package(
         .library(name: "AWSCognitoAuthentication", targets: ["AWSCognitoAuthentication"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/adam-fowler/aws-cognito-authentication-kit.git", .upToNextMajor(from: "1.0.0")),
+        .package(url: "https://github.com/adam-fowler/aws-cognito-authentication-kit.git", .branch("aws-sdk-swift-master")),
         .package(url: "https://github.com/vapor/vapor.git", .upToNextMajor(from: "4.0.0")),
     ],
     targets: [
