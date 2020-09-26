@@ -1,3 +1,3 @@
 @_exported import AWSCognitoAuthenticationKit
-@_exported import AWSCognitoIdentity
-@_exported import AWSCognitoIdentityProvider
+@_exported import SotoCognitoIdentity
+@_exported import SotoCognitoIdentityProvider
