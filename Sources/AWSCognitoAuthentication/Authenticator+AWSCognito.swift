@@ -1,5 +1,4 @@
 import AWSCognitoAuthenticationKit
-import AWSSDKSwiftCore
 import NIO
 import Vapor
 
