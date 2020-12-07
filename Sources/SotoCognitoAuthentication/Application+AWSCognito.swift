@@ -2,16 +2,16 @@ import Vapor
 
 
 public extension Application {
-    var awsCognito: AWSCognito {
+    var cognito: SotoCognito {
         .init(application: self)
     }
 
-    struct AWSCognito {
+    struct SotoCognito {
         struct AuthenticatableKey: StorageKey {
-            typealias Value = AWSCognitoAuthenticatable
+            typealias Value = SotoCognitoAuthenticatable
         }
 
-        public var authenticatable: AWSCognitoAuthenticatable {
+        public var authenticatable: SotoCognitoAuthenticatable {
             get {
                 guard let authenticatable = self.application.storage[AuthenticatableKey.self] else {
                     fatalError("AWSCognito authenticatable not setup. Use application.awsCognito.authenticatable = ...")
@@ -24,10 +24,10 @@ public extension Application {
         }
 
         struct IdentifiableKey: StorageKey {
-            typealias Value = AWSCognitoIdentifiable
+            typealias Value = SotoCognitoIdentifiable
         }
 
-        public var identifiable: AWSCognitoIdentifiable {
+        public var identifiable: SotoCognitoIdentifiable {
             get {
                 guard let identifiable = self.application.storage[IdentifiableKey.self] else {
                     fatalError("AWSCognito identifiable not setup. Use application.awsCognito.identifiable = ...")
