@@ -2,7 +2,7 @@ import SotoCognitoAuthenticationKit
 import Vapor
 
 // extend AWSCognitoAuthenticateResponse so it can be returned from a Vapor route
-extension SotoCognitoAuthenticateResponse: Content {}
+extension CognitoAuthenticateResponse: Content {}
 
 public extension Request {
     
@@ -15,7 +15,7 @@ public extension Request {
         /// helper function that returns if request with bearer token is cognito access authenticated
         /// - returns:
         ///     An access token object that contains the user name and id
-        public func authenticateAccess() -> EventLoopFuture<SotoCognitoAccessToken> {
+        public func authenticateAccess() -> EventLoopFuture<CognitoAccessToken> {
             guard let bearer = request.headers.bearerAuthorization else {
                 return request.eventLoop.makeFailedFuture(Abort(.unauthorized))
             }
@@ -35,7 +35,7 @@ public extension Request {
         /// helper function that returns refreshed access and id tokens given a request containing the refresh token as a  bearer token
         /// - returns:
         ///     The payload contained in the token. See `authenticate<Payload: Codable>(idToken:on:)` for more details
-        public func refresh(username: String) -> EventLoopFuture<SotoCognitoAuthenticateResponse> {
+        public func refresh(username: String) -> EventLoopFuture<CognitoAuthenticateResponse> {
             guard let bearer = request.headers.bearerAuthorization else {
                 return request.eventLoop.makeFailedFuture(Abort(.unauthorized))
             }
@@ -62,7 +62,7 @@ public extension Request {
 }
 
 /// extend Vapor Request to provide Cognito context
-extension Request: SotoCognitoContextData {
+extension Request: CognitoContextData {
     public var contextData: CognitoIdentityProvider.ContextDataType? {
         let host = headers["Host"].first ?? "localhost:8080"
         guard let remoteAddress = remoteAddress else { return nil }

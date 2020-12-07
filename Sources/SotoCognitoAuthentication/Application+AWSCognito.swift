@@ -8,10 +8,10 @@ public extension Application {
 
     struct SotoCognito {
         struct AuthenticatableKey: StorageKey {
-            typealias Value = SotoCognitoAuthenticatable
+            typealias Value = CognitoAuthenticatable
         }
 
-        public var authenticatable: SotoCognitoAuthenticatable {
+        public var authenticatable: CognitoAuthenticatable {
             get {
                 guard let authenticatable = self.application.storage[AuthenticatableKey.self] else {
                     fatalError("AWSCognito authenticatable not setup. Use application.awsCognito.authenticatable = ...")
@@ -24,10 +24,10 @@ public extension Application {
         }
 
         struct IdentifiableKey: StorageKey {
-            typealias Value = SotoCognitoIdentifiable
+            typealias Value = CognitoIdentifiable
         }
 
-        public var identifiable: SotoCognitoIdentifiable {
+        public var identifiable: CognitoIdentifiable {
             get {
                 guard let identifiable = self.application.storage[IdentifiableKey.self] else {
                     fatalError("AWSCognito identifiable not setup. Use application.awsCognito.identifiable = ...")

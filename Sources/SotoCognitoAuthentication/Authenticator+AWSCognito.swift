@@ -2,14 +2,14 @@ import SotoCognitoAuthenticationKit
 import NIO
 import Vapor
 
-extension SotoCognitoAuthenticateResponse: Authenticatable {}
-extension SotoCognitoAccessToken: Authenticatable {}
+extension CognitoAuthenticateResponse: Authenticatable {}
+extension CognitoAccessToken: Authenticatable {}
 
-public typealias SotoCognitoBasicAuthenticatable = SotoCognitoAuthenticateResponse
-public typealias SotoCognitoAccessAuthenticatable = SotoCognitoAccessToken
+public typealias CognitoBasicAuthenticatable = CognitoAuthenticateResponse
+public typealias CognitoAccessAuthenticatable = CognitoAccessToken
 
 /// Authenticator for Cognito username and password
-public struct SotoCognitoBasicAuthenticator: BasicAuthenticator {
+public struct CognitoBasicAuthenticator: BasicAuthenticator {
     
     public init() {}
 
@@ -29,7 +29,7 @@ public struct SotoCognitoBasicAuthenticator: BasicAuthenticator {
 }
 
 /// Authenticator for Cognito access tokens
-public struct SotoCognitoAccessAuthenticator: BearerAuthenticator {
+public struct CognitoAccessAuthenticator: BearerAuthenticator {
     
     public init() {}
     
@@ -51,7 +51,7 @@ public struct SotoCognitoAccessAuthenticator: BearerAuthenticator {
 /// Authenticator for Cognito id tokens. Can use this to extract information from Id Token into Payload struct. The list of standard list of claims found in an id token are
 /// detailed in the [OpenID spec] (https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims) . Your `Payload` type needs
 /// to decode using these tags, plus the AWS specific "cognito:username" tag and any custom tags you have setup for the user pool.
-public struct SotoCognitoIdAuthenticator<Payload: Authenticatable & Codable>: BearerAuthenticator {
+public struct CognitoIdAuthenticator<Payload: Authenticatable & Codable>: BearerAuthenticator {
     
     public init() {}
     
