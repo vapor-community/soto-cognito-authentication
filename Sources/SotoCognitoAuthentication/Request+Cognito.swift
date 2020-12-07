@@ -1,25 +1,25 @@
-import AWSCognitoAuthenticationKit
+import SotoCognitoAuthenticationKit
 import Vapor
 
 // extend AWSCognitoAuthenticateResponse so it can be returned from a Vapor route
-extension AWSCognitoAuthenticateResponse: Content {}
+extension CognitoAuthenticateResponse: Content {}
 
 public extension Request {
     
-    var awsCognito: AWSCognito {
+    var cognito: SotoCognito {
         .init(request: self)
     }
     
-    struct AWSCognito {
+    struct SotoCognito {
         
         /// helper function that returns if request with bearer token is cognito access authenticated
         /// - returns:
         ///     An access token object that contains the user name and id
-        public func authenticateAccess() -> EventLoopFuture<AWSCognitoAccessToken> {
+        public func authenticateAccess() -> EventLoopFuture<CognitoAccessToken> {
             guard let bearer = request.headers.bearerAuthorization else {
                 return request.eventLoop.makeFailedFuture(Abort(.unauthorized))
             }
-            return request.application.awsCognito.authenticatable.authenticate(accessToken: bearer.token, on: request.eventLoop)
+            return request.application.cognito.authenticatable.authenticate(accessToken: bearer.token, on: request.eventLoop)
         }
 
         /// helper function that returns if request with bearer token is cognito id authenticated and returns contents in the payload type
@@ -29,17 +29,17 @@ public extension Request {
             guard let bearer = request.headers.bearerAuthorization else {
                 return request.eventLoop.makeFailedFuture(Abort(.unauthorized))
             }
-            return request.application.awsCognito.authenticatable.authenticate(idToken: bearer.token, on: request.eventLoop)
+            return request.application.cognito.authenticatable.authenticate(idToken: bearer.token, on: request.eventLoop)
         }
 
         /// helper function that returns refreshed access and id tokens given a request containing the refresh token as a  bearer token
         /// - returns:
         ///     The payload contained in the token. See `authenticate<Payload: Codable>(idToken:on:)` for more details
-        public func refresh(username: String) -> EventLoopFuture<AWSCognitoAuthenticateResponse> {
+        public func refresh(username: String) -> EventLoopFuture<CognitoAuthenticateResponse> {
             guard let bearer = request.headers.bearerAuthorization else {
                 return request.eventLoop.makeFailedFuture(Abort(.unauthorized))
             }
-            return request.application.awsCognito.authenticatable.refresh(username: username, refreshToken: bearer.token, context: request, on: request.eventLoop)
+            return request.application.cognito.authenticatable.refresh(username: username, refreshToken: bearer.token, context: request, on: request.eventLoop)
         }
         
         /// helper function that returns AWS credentials for a provided identity. The idToken is provided as a bearer token.
@@ -50,7 +50,7 @@ public extension Request {
             guard let bearer = request.headers.bearerAuthorization else {
                 return request.eventLoop.makeFailedFuture(Abort(.unauthorized))
             }
-            let identifiable = request.application.awsCognito.identifiable
+            let identifiable = request.application.cognito.identifiable
             return identifiable.getIdentityId(idToken: bearer.token, on: request.eventLoop)
                 .flatMap { identity in
                     return identifiable.getCredentialForIdentity(identityId: identity, idToken: bearer.token, on: self.request.eventLoop)
@@ -62,7 +62,7 @@ public extension Request {
 }
 
 /// extend Vapor Request to provide Cognito context
-extension Request: AWSCognitoContextData {
+extension Request: CognitoContextData {
     public var contextData: CognitoIdentityProvider.ContextDataType? {
         let host = headers["Host"].first ?? "localhost:8080"
         guard let remoteAddress = remoteAddress else { return nil }

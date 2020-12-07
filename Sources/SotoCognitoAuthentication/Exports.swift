@@ -1,0 +1,3 @@
+@_exported import SotoCognitoAuthenticationKit
+@_exported import SotoCognitoIdentity
+@_exported import SotoCognitoIdentityProvider
