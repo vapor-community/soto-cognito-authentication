@@ -1,12 +1,17 @@
-name: Swift
+name: CI
 
-on: 
+on:
   push:
-    branches: 
-    - "*"
+    branches:
+    - main
+    paths:
+    - '**.swift'
   pull_request:
-    branches: 
-    - "*"
+    branches:
+    - main
+    paths:
+    - '**.swift'
+  workflow_dispatch:
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -15,8 +20,6 @@ env:
 jobs:
   macOS:
     runs-on: macOS-latest
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_11.4.app/Contents/Developer
     steps:
     - name: Checkout
       uses: actions/checkout@v1
@@ -24,12 +27,12 @@ jobs:
         fetch-depth: 1
     - name: Build
       run: swift build
-      
+
   linux:
     strategy:
       matrix:
         os: [ubuntu-18.04]
-        swift: ["swift:5.2.1"]
+        swift: ["swift:5.2", "swift:5.3"]
     runs-on: ${{ matrix.os }}
     container:
       image: ${{ matrix.swift }}
@@ -41,6 +44,6 @@ jobs:
     - name: Install dependencies
       run: |
         apt-get update -qq
-        apt-get install -q -y tzdata libssl-dev zlib1g-dev
+        apt-get install -q -y tzdata zlib1g-dev
     - name: Build
       run: swift build
