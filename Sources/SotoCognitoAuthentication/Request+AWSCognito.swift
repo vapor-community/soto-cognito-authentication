@@ -1,4 +1,4 @@
-import AWSCognitoAuthenticationKit
+import SotoCognitoAuthenticationKit
 import Vapor
 
 // extend AWSCognitoAuthenticateResponse so it can be returned from a Vapor route

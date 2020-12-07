@@ -1,4 +1,4 @@
-import AWSCognitoAuthenticationKit
+import SotoCognitoAuthenticationKit
 import NIO
 import Vapor
 

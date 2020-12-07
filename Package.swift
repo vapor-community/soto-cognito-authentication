@@ -4,18 +4,18 @@
 import PackageDescription
 
 let package = Package(
-    name: "aws-cognito-authentication",
+    name: "soto-cognito-authentication",
     platforms: [.macOS(.v10_15)],
     products: [
-        .library(name: "AWSCognitoAuthentication", targets: ["AWSCognitoAuthentication"]),
+        .library(name: "SotoCognitoAuthentication", targets: ["SotoCognitoAuthentication"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/adam-fowler/aws-cognito-authentication-kit.git", .branch("soto-v5")),
+        .package(name: "soto-cognito-authentication-kit", url: "https://github.com/adam-fowler/aws-cognito-authentication-kit.git", .branch("soto-v5")),
         .package(url: "https://github.com/vapor/vapor.git", .upToNextMajor(from: "4.0.0")),
     ],
     targets: [
-        .target(name: "AWSCognitoAuthentication", dependencies: [
-            .product(name: "AWSCognitoAuthenticationKit", package: "aws-cognito-authentication-kit"),
+        .target(name: "SotoCognitoAuthentication", dependencies: [
+            .product(name: "SotoCognitoAuthenticationKit", package: "soto-cognito-authentication-kit"),
             .product(name: "Vapor", package: "vapor")
         ])
     ]
