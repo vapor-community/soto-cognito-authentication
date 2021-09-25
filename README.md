@@ -12,7 +12,8 @@ let awsCognitoConfiguration = CognitoConfiguration(
     userPoolId: String = "eu-west-1_userpoolid",
     clientId: String = "23432clientId234234",
     clientSecret: String = "1q9ln4m892j2cnsdapa0dalh9a3aakmpeugiaag8k3cacijlbkrp",
-    cognitoIDP: CognitoIdentityProvider = CognitoIdentityProvider(region: .euwest1)
+    cognitoIDP: CognitoIdentityProvider = CognitoIdentityProvider(region: .euwest1),
+    adminClient: true
 )
 app.cognito.authenticatable = CognitoAuthenticatable(configuration: awsCognitoConfiguration)
 ```
