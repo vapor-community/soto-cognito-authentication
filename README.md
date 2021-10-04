@@ -65,7 +65,7 @@ struct User: Content & Authenticatable {
     }
 }
 ```
-Add a route using the authenticator. The `CognitoIdAuthenticator` authenticates the request, the `guardMiddleware` ensures the user if authenticated. The actual function accesses the `User` type via `req.auth.require`.
+Add a route using the authenticator. The `CognitoIdAuthenticator` authenticates the request, the `guardMiddleware` ensures the user is authenticated. The actual function accesses the `User` type via `req.auth.require`.
 ```swift
 app.grouped(CognitoIdAuthenticator<User>())
     .grouped(User.guardMiddleware())
