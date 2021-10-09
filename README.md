@@ -51,7 +51,7 @@ func authenticateAccess(_ req: Request) throws -> Future<> {
 
 ## Authenticators
 
-Three authenticators are available. See the [Vapor docs](https://docs.vapor.codes/4.0/authentication) for more details on authentication in Vapor.`CognitoBasicAuthenticator` will do username, password authentication and returns a `CognitoAuthenticateResponse`. `CognitoAccessAuthenticator` will do access token authentication and returns an `CognitoAccessToken` which holds all the information that could be extracted from the access token. `CognitoIdAuthenticator<Payload>` does id token authentication and extracts information from the id token into your own `Payload` type. The standard list of claims that can be found in an id token are detailed in the [OpenID spec] (https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims). Your `Payload` type needs to decode using these tags, the username tag "cognito:username" and any custom tags you may have setup for the user pool. Below is an example of using the id token authenticator.
+Three authenticators are available. See the [Vapor docs](https://docs.vapor.codes/4.0/authentication) for more details on authentication in Vapor. `CognitoBasicAuthenticator` will do username, password authentication and returns a `CognitoAuthenticateResponse`. `CognitoAccessAuthenticator` will do access token authentication and returns an `CognitoAccessToken` which holds all the information that could be extracted from the access token. `CognitoIdAuthenticator<Payload>` does id token authentication and extracts information from the id token into your own `Payload` type. The standard list of claims that can be found in an id token are detailed in the [OpenID spec] (https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims). Your `Payload` type needs to decode using these tags, the username tag "cognito:username" and any custom tags you may have setup for the user pool. Below is an example of using the id token authenticator.
 
 First create a User type to store your id token payload in.
 ```swift
@@ -65,6 +65,21 @@ struct User: Content & Authenticatable {
     }
 }
 ```
+
+An example using `CognitoBasicAuthenticator`:
+
+```swift
+        let cognitoBasicAuth = routes.grouped(CognitoBasicAuthenticator())
+        cognitoBasicAuth.post("login", use: login)
+        
+    }
+    func login(_ req: Request) throws -> EventLoopFuture<CognitoAuthenticateResponse> {
+        let cogBasicResponse = try req.auth.require(CognitoAuthenticateResponse.self)
+        return req.eventLoop.future(cogBasicResponse)
+    }
+ ```
+That will return three tokens (`Access`, `ID`, and `Refresh`) or a `401 Not Authorized` if it fails.
+
 Add a route using the authenticator. The `CognitoIdAuthenticator` authenticates the request, the `guardMiddleware` ensures the user is authenticated. The actual function accesses the `User` type via `req.auth.require`.
 ```swift
 app.grouped(CognitoIdAuthenticator<User>())
