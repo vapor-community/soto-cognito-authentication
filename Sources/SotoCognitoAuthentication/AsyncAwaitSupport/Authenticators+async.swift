@@ -21,22 +21,21 @@ import Vapor
 @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
 public struct AsyncCognitoBasicAuthenticator: AsyncBasicAuthenticator {
     public init() {}
-    
-    public func authenticate(basic: BasicAuthorization, for request: Request) async throws  {
+
+    public func authenticate(basic: BasicAuthorization, for request: Request) async throws {
         do {
             let token = try await request.application.cognito.authenticatable.authenticate(
                 username: basic.username,
                 password: basic.password,
                 context: request,
-                on:request.eventLoop
+                on: request.eventLoop
             )
             request.auth.login(token)
         } catch let error as AWSErrorType {
             throw error
         } catch let error as NIOConnectionError {
             throw error
-        } catch {
-        }
+        } catch {}
     }
 }
 
@@ -45,17 +44,16 @@ public struct AsyncCognitoBasicAuthenticator: AsyncBasicAuthenticator {
 public struct AsyncCognitoAccessAuthenticator: AsyncBearerAuthenticator {
     public init() {}
 
-    public func authenticate(bearer: BearerAuthorization, for request: Request) async throws  {
+    public func authenticate(bearer: BearerAuthorization, for request: Request) async throws {
         do {
             let token = try await request.application.cognito.authenticatable.authenticate(
                 accessToken: bearer.token,
-                on:request.eventLoop
+                on: request.eventLoop
             )
             request.auth.login(token)
         } catch let error as NIOConnectionError {
             throw error
-        } catch {
-        }
+        } catch {}
     }
 }
 
@@ -74,10 +72,8 @@ public struct AsyncCognitoIdAuthenticator<Payload: Authenticatable & Codable>: A
             request.auth.login(payload)
         } catch let error as NIOConnectionError {
             throw error
-        } catch {
-        }
+        } catch {}
     }
-
 }
 
 #endif // compiler(>=5.5) && canImport(_Concurrency)
