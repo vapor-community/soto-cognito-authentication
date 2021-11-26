@@ -20,7 +20,7 @@ let package = Package(
     targets: [
         .target(name: "SotoCognitoAuthentication", dependencies: [
             .product(name: "SotoCognitoAuthenticationKit", package: "soto-cognito-authentication-kit"),
-            .product(name: "Vapor", package: "vapor")
-        ])
+            .product(name: "Vapor", package: "vapor"),
+        ]),
     ]
 )
