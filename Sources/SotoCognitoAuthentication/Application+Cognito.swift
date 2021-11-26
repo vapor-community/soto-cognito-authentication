@@ -1,6 +1,5 @@
 import Vapor
 
-
 public extension Application {
     var cognito: SotoCognito {
         .init(application: self)
