@@ -53,7 +53,7 @@ extension Request.SotoCognito {
             on: request.eventLoop
         )
     }
-    
+
     /// helper function that returns AWS credentials for a provided identity. The idToken is provided as a bearer token.
     /// If you have setup to use an AWSCognito User pool to identify users then the idToken is the idToken returned from the `authenticate` function
     /// - returns:
@@ -66,7 +66,6 @@ extension Request.SotoCognito {
         let identity = try await identifiable.getIdentityId(idToken: bearer.token, on: request.eventLoop)
         return try await identifiable.getCredentialForIdentity(identityId: identity, idToken: bearer.token, on: self.request.eventLoop)
     }
-
 }
 
 #endif // compiler(>=5.5) && canImport(_Concurrency)
