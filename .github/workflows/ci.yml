@@ -13,20 +13,14 @@ on:
     - '**.swift'
   workflow_dispatch:
 
-env:
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
 jobs:
   macOS:
     runs-on: macOS-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
-      with:
-        fetch-depth: 1
+      uses: actions/checkout@v2
     - name: Build
-      run: swift build
+      run: swift test
 
   linux:
     strategy:
