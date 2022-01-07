@@ -17,7 +17,6 @@
 import NIO
 import Vapor
 
-@available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
 extension Request.SotoCognito {
     /// helper function that returns if request with bearer token is cognito access authenticated
     /// - returns:
