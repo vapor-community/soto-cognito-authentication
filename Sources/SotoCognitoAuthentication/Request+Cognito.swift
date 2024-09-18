@@ -13,8 +13,8 @@
 //===----------------------------------------------------------------------===//
 
 import NIO
-import Vapor
 import SotoCognitoAuthenticationKit
+import Vapor
 
 // extend AWSCognitoAuthenticateResponse so it can be returned from a Vapor route
 #if hasFeature(RetroactiveAttribute)
@@ -36,7 +36,7 @@ public extension Request {
             guard let bearer = request.headers.bearerAuthorization else {
                 throw Abort(.unauthorized)
             }
-            return try await request.application.cognito.authenticatable.authenticate(accessToken: bearer.token)
+            return try await self.request.application.cognito.authenticatable.authenticate(accessToken: bearer.token)
         }
 
         /// helper function that returns if request with bearer token is cognito id authenticated and returns contents in the payload type
@@ -46,7 +46,7 @@ public extension Request {
             guard let bearer = request.headers.bearerAuthorization else {
                 throw Abort(.unauthorized)
             }
-            return try await request.application.cognito.authenticatable.authenticate(idToken: bearer.token)
+            return try await self.request.application.cognito.authenticatable.authenticate(idToken: bearer.token)
         }
 
         /// helper function that returns refreshed access and id tokens given a request containing the refresh token as a  bearer token
@@ -56,10 +56,10 @@ public extension Request {
             guard let bearer = request.headers.bearerAuthorization else {
                 throw Abort(.unauthorized)
             }
-            return try await request.application.cognito.authenticatable.refresh(
+            return try await self.request.application.cognito.authenticatable.refresh(
                 username: username,
                 refreshToken: bearer.token,
-                context: request
+                context: self.request
             )
         }
 
@@ -71,7 +71,7 @@ public extension Request {
             guard let bearer = request.headers.bearerAuthorization else {
                 throw Abort(.unauthorized)
             }
-            let identifiable = request.application.cognito.identifiable
+            let identifiable = self.request.application.cognito.identifiable
             let identity = try await identifiable.getIdentityId(idToken: bearer.token)
             return try await identifiable.getCredentialForIdentity(identityId: identity, idToken: bearer.token)
         }
