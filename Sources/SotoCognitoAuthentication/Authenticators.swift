@@ -16,20 +16,26 @@ import NIO
 import SotoCognitoAuthenticationKit
 import Vapor
 
+#if hasFeature(RetroactiveAttribute)
+extension CognitoAuthenticateResponse: @retroactive Authenticatable {}
+extension CognitoAccessToken: @retroactive Authenticatable {}
+#else
 extension CognitoAuthenticateResponse: Authenticatable {}
 extension CognitoAccessToken: Authenticatable {}
+#endif
 
 public typealias CognitoBasicAuthenticatable = CognitoAuthenticateResponse
 public typealias CognitoAccessAuthenticatable = CognitoAccessToken
 
 /// Authenticator for Cognito username and password
-public struct CognitoBasicAuthenticator: BasicAuthenticator {
+public struct CognitoBasicAuthenticator: AsyncBasicAuthenticator {
     public init() {}
 
-    public func authenticate(basic: BasicAuthorization, for request: Request) -> EventLoopFuture<Void> {
-        return request.application.cognito.authenticatable.authenticate(username: basic.username, password: basic.password, context: request, on: request.eventLoop).map { token in
+    public func authenticate(basic: BasicAuthorization, for request: Request) async throws {
+        do {
+            let token = try await request.application.cognito.authenticatable.authenticate(username: basic.username, password: basic.password, context: request)
             request.auth.login(token)
-        }.flatMapErrorThrowing { error in
+        } catch {
             switch error {
             case is AWSErrorType, is NIOConnectionError:
                 // report connection errors with AWS, or unrecognised AWSErrorTypes
@@ -42,13 +48,14 @@ public struct CognitoBasicAuthenticator: BasicAuthenticator {
 }
 
 /// Authenticator for Cognito access tokens
-public struct CognitoAccessAuthenticator: BearerAuthenticator {
+public struct CognitoAccessAuthenticator: AsyncBearerAuthenticator {
     public init() {}
 
-    public func authenticate(bearer: BearerAuthorization, for request: Request) -> EventLoopFuture<Void> {
-        return request.application.cognito.authenticatable.authenticate(accessToken: bearer.token, on: request.eventLoop).map { token in
+    public func authenticate(bearer: BearerAuthorization, for request: Request) async throws {
+        do {
+            let token = try await request.application.cognito.authenticatable.authenticate(accessToken: bearer.token)
             request.auth.login(token)
-        }.flatMapErrorThrowing { error in
+        } catch {
             switch error {
             case is NIOConnectionError:
                 // loading of jwk may cause a connection error. We should report this
@@ -63,13 +70,14 @@ public struct CognitoAccessAuthenticator: BearerAuthenticator {
 /// Authenticator for Cognito id tokens. Can use this to extract information from Id Token into Payload struct. The list of standard list of claims found in an id token are
 /// detailed in the [OpenID spec] (https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims) . Your `Payload` type needs
 /// to decode using these tags, plus the AWS specific "cognito:username" tag and any custom tags you have setup for the user pool.
-public struct CognitoIdAuthenticator<Payload: Authenticatable & Codable>: BearerAuthenticator {
+public struct CognitoIdAuthenticator<Payload: Authenticatable & Codable>: AsyncBearerAuthenticator {
     public init() {}
 
-    public func authenticate(bearer: BearerAuthorization, for request: Request) -> EventLoopFuture<Void> {
-        return request.application.cognito.authenticatable.authenticate(idToken: bearer.token, on: request.eventLoop).map { (payload: Payload) -> Void in
+    public func authenticate(bearer: BearerAuthorization, for request: Request) async throws {
+        do {
+            let payload: Payload = try await request.application.cognito.authenticatable.authenticate(idToken: bearer.token)
             request.auth.login(payload)
-        }.flatMapErrorThrowing { error in
+        } catch {
             switch error {
             case is NIOConnectionError:
                 // loading of jwk may cause a connection error. We should report this
