@@ -26,7 +26,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        swift: ["swift:5.9", "swift:5.10", "swift:6.0"]
+        swift: ["swift:5.10", "swift:6.0"]
     runs-on: ${{ matrix.os }}
     container:
       image: ${{ matrix.swift }}
