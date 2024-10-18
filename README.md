@@ -1,6 +1,6 @@
 # Soto Cognito Authentication
-[<img src="http://img.shields.io/badge/swift-5.1-brightgreen.svg" alt="Swift 5.1" />](https://swift.org)
-[<img src="https://github.com/adam-fowler/soto-cognito-authentication/workflows/Swift/badge.svg" />](https://github.com/adam-fowler/soto-cognito-authentication/actions?query=workflow%3ASwift)
+[<img src="http://img.shields.io/badge/swift-6.0-brightgreen.svg" alt="Swift 6.0" />](https://swift.org)
+[<img src="https://github.com/vapor-community/soto-cognito-authentication/workflows/CI/badge.svg" />](https://github.com/vapor-community/soto-cognito-authentication/actions?query=workflow%3ACI)
 
 This is the Vapor wrapper for [Soto Cognito Authentication Kit](https://github.com/adam-fowler/soto-cognito-authentication-kit). It provides application storage for configurations and authentication calls on request. Documentation on Soto Cognito Authentication Kit can be found [here](https://github.com/adam-fowler/soto-cognito-authentication-kit/blob/main/README.md)
 
