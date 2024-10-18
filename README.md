@@ -31,9 +31,9 @@ let app.cognito.identifiable = CognitoIdentifiable(configuration: awsCognitoIden
 ## Accessing functionality
 Functions like `createUser`, `signUp`, `authenticate` with username and password and `responseToChallenge` are all accessed through `request.application.cognito.authenticatable`. The following login route will return the full response from `CognitoAuthenticable.authenticate`.
 ```swift
-    func login(_ req: Request) throws -> EventLoopFuture<CognitoAuthenticateResponse> {
+    func login(_ req: Request) async throws -> CognitoAuthenticateResponse {
         let user = try req.content.decode(User.self)
-        return req.application.cognito.authenticatable.authenticate(
+        return try await req.application.cognito.authenticatable.authenticate(
             username: user.username,
             password: user.password,
             context: req,
@@ -42,10 +42,8 @@ Functions like `createUser`, `signUp`, `authenticate` with username and password
 ```
 If id, access or refresh tokens are provided in the 'Authorization' header as Bearer tokens the following functions in Request can be used to verify them `authenticate(idToken:)`, `authenticate(accessToken:)`, `refresh`. as in the following
 ```swift
-func authenticateAccess(_ req: Request) throws -> Future<> {
-    req.cognito.authenticateAccess().flatMap { _ in
-        ...
-    }
+func authenticateAccess(_ req: Request) async throws {
+    let token = try await req.cognito.authenticateAccess()
 }
 ```
 
