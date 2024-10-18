@@ -70,7 +70,7 @@ public struct CognitoAccessAuthenticator: AsyncBearerAuthenticator {
 /// Authenticator for Cognito id tokens. Can use this to extract information from Id Token into Payload struct. The list of standard list of claims found in an id token are
 /// detailed in the [OpenID spec] (https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims) . Your `Payload` type needs
 /// to decode using these tags, plus the AWS specific "cognito:username" tag and any custom tags you have setup for the user pool.
-public struct CognitoIdAuthenticator<Payload: Authenticatable & Codable>: AsyncBearerAuthenticator {
+public struct CognitoIdAuthenticator<Payload: Authenticatable & Codable & Sendable>: AsyncBearerAuthenticator {
     public init() {}
 
     public func authenticate(bearer: BearerAuthorization, for request: Request) async throws {

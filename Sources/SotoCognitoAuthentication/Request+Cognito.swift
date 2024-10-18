@@ -42,7 +42,7 @@ public extension Request {
         /// helper function that returns if request with bearer token is cognito id authenticated and returns contents in the payload type
         /// - returns:
         ///     The payload contained in the token. See `authenticate<Payload: Codable>(idToken:on:)` for more details
-        public func authenticateId<Payload: Codable>() async throws -> Payload {
+        public func authenticateId<Payload: Codable & Sendable>() async throws -> Payload {
             guard let bearer = request.headers.bearerAuthorization else {
                 throw Abort(.unauthorized)
             }
