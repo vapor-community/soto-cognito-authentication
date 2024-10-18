@@ -5,12 +5,14 @@ on:
     branches:
     - main
     paths:
-    - '**.swift'
+      - '**.swift'
+      - '**.yml'
   pull_request:
     branches:
     - main
     paths:
     - '**.swift'
+    - '**.yml'
   workflow_dispatch:
 
 jobs:
